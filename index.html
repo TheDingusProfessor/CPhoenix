@@ -488,7 +488,7 @@ function AuthScreen({ onLogin }) {
       RC('label',null,'Email'),RC('input',{type:'email',placeholder:'warrior@email.com',value:email,onChange:e=>setEmail(e.target.value)}),
       RC('label',null,'Password'),RC('input',{type:'password',placeholder:'••••••••',value:pw,onChange:e=>setPw(e.target.value),onKeyDown:e=>e.key==='Enter'&&(tab==='login'?login():register())}),
       RC('button',{className:'btn btn-fire',style:{marginTop:'0.75rem'},onClick:tab==='login'?login:register,disabled:loading},loading?'Please wait...':'Login'),
-      tab==='login'&&RC('p',{style:{fontSize:11,color:'rgba(255,255,255,0.3)',marginTop:'1rem',textAlign:'center'}},'Admin: admin@cancerphenox.com'),
+      
     )
   );
 }
