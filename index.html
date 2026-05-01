@@ -475,8 +475,19 @@ function AuthScreen({ onLogin }) {
     const{data,error}=await sb.auth.signUp({email,password:pw,options:{data:{name:name.trim(),role:'user'}}});
     if(error){setErr(error.message);setLoading(false);return;}
     if(data.user){
+      // Wait for trigger to create profile then sign in properly
       await addNotification(data.user.id,'🔥 Welcome to Cancer PhoenX, '+name.split(' ')[0]+'. You are a warrior. Your healing journey begins now.','welcome');
-      setTimeout(async()=>{const profile=await getProfile(data.user.id);onLogin(data.user,profile);},1000);
+      // Sign in immediately after signup
+      const{data:signInData,error:signInError}=await sb.auth.signInWithPassword({email,password:pw});
+      if(signInError){setErr('Account created! Please sign in.');setTab('login');setLoading(false);return;}
+      let profile=null;
+      for(let i=0;i<10;i++){
+        profile=await getProfile(signInData.user.id);
+        if(profile)break;
+        await new Promise(r=>setTimeout(r,500));
+      }
+      if(profile){onLogin(signInData.user,profile);}
+      else{setErr('Account created! Please sign in.');setTab('login');setLoading(false);}
     }
   };
   return RC('div',{className:'auth-screen'},
